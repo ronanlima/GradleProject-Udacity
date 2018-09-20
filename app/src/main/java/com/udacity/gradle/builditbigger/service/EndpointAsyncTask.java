@@ -10,6 +10,7 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
+import com.udacity.gradle.builditbigger.MainActivity;
 import com.udacity.gradle.builditbigger.backend.myApi.MyApi;
 import com.udacity.gradle.builditbigger.testutil.SimpleIdlingResource;
 import com.udacity.ronanlima.jokeandroidlib.JokeLibActivity;
@@ -25,6 +26,7 @@ public class EndpointAsyncTask extends AsyncTask<EndpointParam, Void, String> {
     private Context context;
     @Nullable
     private SimpleIdlingResource mSimpleIdlingResource;
+    private MainActivity.JokeConsumer listener;
 
     @Override
     protected String doInBackground(EndpointParam... params) {
@@ -49,6 +51,8 @@ public class EndpointAsyncTask extends AsyncTask<EndpointParam, Void, String> {
         context = params[0].getContext();
         String name = params[0].getName();
         mSimpleIdlingResource = params[0].getSimpleIdlingResource();
+        listener = params[0].getListener();
+
         if (mSimpleIdlingResource != null) {
             mSimpleIdlingResource.setIdleState(false);
         }
@@ -66,9 +70,6 @@ public class EndpointAsyncTask extends AsyncTask<EndpointParam, Void, String> {
             mSimpleIdlingResource.setIdleState(true);
         }
 
-        Toast.makeText(context, result, Toast.LENGTH_LONG).show();
-        Intent i = new Intent(context, JokeLibActivity.class);
-        i.putExtra(Intent.EXTRA_TEXT, result);
-        context.startActivity(i);
+        listener.run(result);
     }
 }

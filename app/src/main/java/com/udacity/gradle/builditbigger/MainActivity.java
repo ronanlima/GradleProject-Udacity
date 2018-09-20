@@ -1,30 +1,58 @@
 package com.udacity.gradle.builditbigger;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.test.espresso.IdlingResource;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.udacity.gradle.builditbigger.service.EndpointAsyncTask;
 import com.udacity.gradle.builditbigger.service.EndpointParam;
 import com.udacity.gradle.builditbigger.testutil.SimpleIdlingResource;
+import com.udacity.ronanlima.jokeandroidlib.JokeLibActivity;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
     @Nullable
     private SimpleIdlingResource mSimpleIdlingResource;
+    @BindView(R.id.progressBar1)
+    ProgressBar mProgressBar;
+
+    private JokeConsumer listenerJoke = new JokeConsumer() {
+        @Override
+        public void run(String result) {
+            mProgressBar.setVisibility(View.GONE);
+            Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
+            Intent i = new Intent(MainActivity.this, JokeLibActivity.class);
+            i.putExtra(Intent.EXTRA_TEXT, result);
+            startActivity(i);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-    }
+        ButterKnife.bind(this);
 
+        if (savedInstanceState == null) {
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction transaction = fm.beginTransaction();
+            transaction.add(R.id.fragment_container, new MainActivityFragment(), MainActivityFragment.TAG).commit();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -49,7 +77,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(View view) {
-        new EndpointAsyncTask().execute(new EndpointParam(this, "Manfred", mSimpleIdlingResource));
+        mProgressBar.setVisibility(View.VISIBLE);
+        new EndpointAsyncTask().execute(new EndpointParam(this, "Manfred", mSimpleIdlingResource, listenerJoke));
+        MainActivityFragment fragment = (MainActivityFragment) getSupportFragmentManager().findFragmentByTag(MainActivityFragment.TAG);
+        if (fragment != null) {
+            fragment.showAds();
+        }
     }
 
     @VisibleForTesting
@@ -59,5 +92,13 @@ public class MainActivity extends AppCompatActivity {
             mSimpleIdlingResource = new SimpleIdlingResource();
         }
         return mSimpleIdlingResource;
+    }
+
+    public interface ButtonJokeListener {
+        void showAds();
+    }
+
+    public interface JokeConsumer {
+        void run(String result);
     }
 }

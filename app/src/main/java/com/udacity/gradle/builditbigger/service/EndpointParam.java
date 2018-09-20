@@ -2,6 +2,7 @@ package com.udacity.gradle.builditbigger.service;
 
 import android.content.Context;
 
+import com.udacity.gradle.builditbigger.MainActivity;
 import com.udacity.gradle.builditbigger.testutil.SimpleIdlingResource;
 
 /**
@@ -12,11 +13,13 @@ public class EndpointParam {
     private Context mContext;
     private String name;
     private SimpleIdlingResource mSimpleIdlingResource;
+    private MainActivity.JokeConsumer listener;
 
-    public EndpointParam(Context context, String name, SimpleIdlingResource simpleIdlingResource) {
+    public EndpointParam(Context context, String name, SimpleIdlingResource simpleIdlingResource, MainActivity.JokeConsumer listener) {
         setContext(context);
         setName(name);
         setSimpleIdlingResource(simpleIdlingResource);
+        setListener(listener);
     }
 
     public Context getContext() {
@@ -41,5 +44,13 @@ public class EndpointParam {
 
     public void setSimpleIdlingResource(SimpleIdlingResource mSimpleIdlingResource) {
         this.mSimpleIdlingResource = mSimpleIdlingResource;
+    }
+
+    public MainActivity.JokeConsumer getListener() {
+        return listener;
+    }
+
+    public void setListener(MainActivity.JokeConsumer listener) {
+        this.listener = listener;
     }
 }

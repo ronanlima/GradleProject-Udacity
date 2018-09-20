@@ -10,7 +10,8 @@ import android.view.ViewGroup;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment {
+public class MainActivityFragment extends Fragment implements MainActivity.ButtonJokeListener {
+    public static final String TAG = MainActivityFragment.class.getSimpleName().toUpperCase();
 
     public MainActivityFragment() {
     }
@@ -20,5 +21,10 @@ public class MainActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_main, container, false);
         return root;
+    }
+
+    @Override
+    public void showAds() {
+        // Do nothing.
     }
 }
