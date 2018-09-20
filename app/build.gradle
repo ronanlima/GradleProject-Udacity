@@ -32,6 +32,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    productFlavors {
+        free {
+            applicationIdSuffix "free"
+        }
+
+        paid {
+            applicationIdSuffix "paid"
+        }
+    }
 }
 
 final androidVersion = '26.0.2'
@@ -42,7 +52,7 @@ dependencies {
     compile "com.android.support:appcompat-v7:$androidVersion"
     compile "com.android.support:support-annotations:$androidVersion"
     compile 'com.android.support.test.espresso:espresso-idling-resource:2.2.2'
-    compile 'com.google.android.gms:play-services-ads:11.8.0'
+    freeCompile 'com.google.android.gms:play-services-ads:11.8.0'
     compile 'com.google.code.findbugs:jsr305:2.0.1'
 
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
