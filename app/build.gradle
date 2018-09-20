@@ -34,10 +34,14 @@ android {
     }
 }
 
+final androidVersion = '26.0.2'
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'com.android.support:appcompat-v7:26.0.2'
+    compile "com.android.support:appcompat-v7:$androidVersion"
+    compile "com.android.support:support-annotations:$androidVersion"
+    compile 'com.android.support.test.espresso:espresso-idling-resource:2.2.2'
     compile 'com.google.android.gms:play-services-ads:11.8.0'
     compile 'com.google.code.findbugs:jsr305:2.0.1'
 
@@ -46,6 +50,10 @@ dependencies {
     })
 
     testCompile 'junit:junit:4.12'
+    // Testing-only dependencies
+    testCompile 'com.android.support.test.espresso:espresso-intents:2.2.2'
+    testCompile 'com.android.support.test:rules:0.5'
+    testCompile 'com.android.support.test:runner:0.5'
 
     endpointsServer project(path: ':backend', configuration: 'endpoints')
     compile 'com.google.api-client:google-api-client:1.23.0'
@@ -53,3 +61,7 @@ dependencies {
     compile project(path: ':libJoke')
     compile project(path: ':jokeandroidlib')
 }
+
+//configurations.all {
+//    resolutionStrategy.force 'com.google.code.findbugs:jsr305:2.0.1'
+//}

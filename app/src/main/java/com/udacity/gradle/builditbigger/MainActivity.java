@@ -1,19 +1,23 @@
 package com.udacity.gradle.builditbigger;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.util.Pair;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.udacity.gradle.builditbigger.service.EndpointAsyncTask;
-import com.udacity.ronanlima.jokeandroidlib.JokeLibActivity;
-import com.udacity.ronanlima.libjoke.JokeGenerate;
+import com.udacity.gradle.builditbigger.service.EndpointParam;
+import com.udacity.gradle.builditbigger.testutil.SimpleIdlingResource;
 
 public class MainActivity extends AppCompatActivity {
+
+    @Nullable
+    private SimpleIdlingResource mSimpleIdlingResource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +49,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(View view) {
-//        String piada = JokeGenerate.contarPiada();
-//        Intent i = new Intent(this, JokeLibActivity.class);
-//        i.putExtra(Intent.EXTRA_TEXT, piada);
-//        startActivity(i);
-        new EndpointAsyncTask().execute(new Pair<Context, String>(this, "Manfred"));
+        new EndpointAsyncTask().execute(new EndpointParam(this, "Manfred", mSimpleIdlingResource));
     }
 
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (mSimpleIdlingResource == null) {
+            mSimpleIdlingResource = new SimpleIdlingResource();
+        }
+        return mSimpleIdlingResource;
+    }
 }
