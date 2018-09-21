@@ -63,9 +63,12 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
     // Testing-only dependencies
+    testCompile "com.android.support:support-annotations:$androidVersion"
     testCompile 'com.android.support.test.espresso:espresso-intents:2.2.2'
     testCompile 'com.android.support.test:rules:0.5'
-    testCompile 'com.android.support.test:runner:0.5'
+    testCompile('com.android.support.test:runner:0.5', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
 
     endpointsServer project(path: ':backend', configuration: 'endpoints')
     compile 'com.google.api-client:google-api-client:1.23.0'

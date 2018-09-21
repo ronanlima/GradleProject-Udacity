@@ -23,3 +23,35 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+task startServer {
+    description "Start the GCE server"
+    group "Ronan Udacity"
+    shouldRunAfter tasks.getByPath(":backend:appengineStop")
+    dependsOn = [tasks.getByPath(':backend:appengineStart')]
+
+    doLast {
+        println "The server was started"
+    }
+}
+
+task executeMyAppTests {
+    description "Test functionalities"
+    group "Ronan Udacity"
+
+    dependsOn = [startServer, ':app:test', ':app:deviceCheck', ':app:connectedAndroidTest']
+
+    doLast {
+        println "The code was tested"
+    }
+}
+
+task stopServer {
+    description "Stop the GCE server"
+    group "Ronan Udacity"
+    dependsOn tasks.getByPath(':backend:appengineStop')
+
+    doLast {
+        println "The server was stopped"
+    }
+}
